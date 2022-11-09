@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ImageGalleryItem from '../ImageGalleryItem';
 import Button from '../Button';
 import Loader from '../Loader';
-import Modal from '../Modal';
+import Modal from '../Modal/Modal';
 import { fetchImages } from '../../services/pixabay-api';
 
 class ImageGallery extends Component {
