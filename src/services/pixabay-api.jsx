@@ -5,10 +5,10 @@ const IMAGES_PER_PAGE = 12;
 function fetchImages(query, page) {
     return fetch(`${BASE_URL}&key=${API_KEY}&q=${query}&page=${page}&per_page=${IMAGES_PER_PAGE}`)
         .then(response => {
-            if (response.ok) return response.json();
-            return Promise.reject(new Error(`No results found for: ${query}!`));
+        if (response.ok) return response.json();
+        return Promise.reject(new Error(`По запросу "${query}" ничего не найдено!`));
         })
-        .then(({ hits }) => hits);
+    .then(({ hits }) => hits);
 }
 
 export { fetchImages };

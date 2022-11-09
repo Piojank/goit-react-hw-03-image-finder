@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import ImageGalleryItem from '../ImageGalleryItem';
 import Button from '../Button';
 import Loader from '../Loader';
-import Modal from '../Modal/Modal';
+import Modal from '../Modal';
+import { ThreeDots } from 'react-loader-spinner';
 import { fetchImages } from '../../services/pixabay-api';
 
 class ImageGallery extends Component {
@@ -23,44 +24,43 @@ class ImageGallery extends Component {
         largeImageURL: '',
         imageAlt: '',
     };
-
     async componentDidUpdate(prevProps, prevState) {
         const { query: prevQuery } = prevProps;
         const { query } = this.props;
 
         if (prevQuery !== query) {
-            await this.setState({
-                images: [],
-                page: 1,
-                query,
-                isLoading: true,
-                btnStatus: false,
-                error: null,
-            });
-            await this.setGallery();
+        await this.setState({
+            images: [],
+            page: 1,
+            query,
+            isLoading: true,
+            btnStatus: false,
+            error: null,
+        });
+        await this.setGallery();
         }
     }
 
     setGallery = () => {
         const { query, page } = this.state;
         fetchImages(query, page)
-            .then(images => {
-                this.setState({ images: [...this.state.images, ...images] });
-                if (images.length > 0) this.setState({ btnStatus: true });
-            })
-            .catch(error => {
-                this.setState({ error })
-            })
-            .finally(() => {
-                this.handleScroll();
-                this.setState({ isLoading: false });
-            });
+        .then(images => {
+            this.setState({ images: [...this.state.images, ...images] });
+            if (images.length > 0) this.setState({ btnStatus: true });
+        })
+        .catch(error => {
+            this.setState({ error });
+        })
+        .finally(() => {
+            this.handleScroll();
+            this.setState({ isLoading: false });
+        });
     };
 
     handleScroll = () => {
-        window.scroll({
-            top: document.documentElement.scrollHeight,
-            behavior: 'smooth',
+        window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth',
         });
     };
 
@@ -79,55 +79,54 @@ class ImageGallery extends Component {
         largeImageURL ? this.setState({ largeImageURL }) : this.setState({ largeImageURL: '' });
         imageAlt ? this.setState({ imageAlt }) : this.setState({ imageAlt: '' });
     };
-
     handleSwitchImageLoading = () => {
         this.setState(({ imageLoading }) => ({ imageLoading: false }));
     };
 
     render() {
         const {
-            images,
-            isLoading,
-            btnStatus,
-            showModal,
-            largeImageURL,
-            imageAlt,
-            error,
-            imageLoading,
+        images,
+        isLoading,
+        btnStatus,
+        showModal,
+        largeImageURL,
+        imageAlt,
+        error,
+        imageLoading,
         } = this.state;
-
         return (
-            <>
-                {error ? (
-                    <h1>{error.message}</h1>
-                ) : (
-                        <ul className="ImageGallery">
-                            {images.map((el, index) => {
-                                const { webformatURL, tags, largeImageURL } = el;
-                                return (
-                                    <ImageGalleryItem
-                                        key={index}
-                                        src={webformatURL}
-                                        alt={tags}
-                                        largeImageURL={largeImageURL}
-                                        getLargeImageURL={this.handleGetLargeImageURL}
-                                    />
-                                );
-                            })}
-                        </ul>
-                )}
-                {isLoading && <Loader type="Bars" color="#3f51b5" className="loader" />}
-                {btnStatus && <Button onClick={this.handleLoadNextPage} />}
-                {showModal && (
-                    <Modal onClose={this.handleSwitchModalStatus}>
-                        <>
-                            {imageLoading && <Loader type="ThreeDots" color="#fff" className="loaderModal" />}
-                            <img src={largeImageURL} alt={imageAlt} onLoad={this.handleSwitchImageLoading} />
-                        </>
-                    </Modal>
-                )}
-            </>
-        )
+        <>
+            {error ? (
+            <h1>{error.message}</h1>
+            ) : (
+            <ul className="ImageGallery">
+                {images.map((el, index) => {
+                const { webformatURL, tags, largeImageURL } = el;
+                return (
+                    <ImageGalleryItem
+                    key={index}
+                    src={webformatURL}
+                    alt={tags}
+                    largeImageURL={largeImageURL}
+                    getLargeImageURL={this.handleGetLargeImageURL}
+                    />
+                );
+                })}
+            </ul>
+            )}
+            {isLoading && <Loader type="Bars" color="#3f51b5" className="loader" />}
+            {btnStatus && <Button onClick={this.handleLoadNextPage} />}
+            {showModal && (
+            <Modal onClose={this.handleSwitchModalStatus}>
+                <>
+                {imageLoading && <ThreeDots color="#fff" className="loaderModal" />}
+                <img src={largeImageURL} alt={imageAlt} onLoad={this.handleSwitchImageLoading} />
+                </>
+            </Modal>
+            )}
+        </>
+        );
     }
 }
+
 export default ImageGallery;
