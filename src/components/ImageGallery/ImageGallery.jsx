@@ -4,7 +4,7 @@ import ImageGalleryItem from '../ImageGalleryItem';
 import Button from '../Button';
 import Loader from '../Loader';
 import Modal from '../Modal';
-import { fetchImages } from '../../utils/pixabay-api';
+import { fetchImages } from '../../services/pixabay-api';
 
 class ImageGallery extends Component {
     static propTypes = {
