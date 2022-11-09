@@ -1,17 +1,18 @@
 import PropTypes from 'prop-types';
-import { Audio } from  'react-loader-spinner'
+import { ThreeDots } from 'react-loader-spinner';
 
 const Loader = () => {
     return (
-        <Audio
-            visible="true"
-            color='#000'
-            className = 'loader'
-            height={50}
-            width={50}
-            ariaLabel="audio-loading"
-            wrapperStyle={{}}
-            wrapperClass="wrapper-class"
+        <ThreeDots 
+        height="80" 
+        width="80" 
+        radius="9"
+        color="#4fa94d" 
+        ariaLabel="three-dots-loading"
+        wrapperStyle={{}}
+        wrapperClassName=""
+        visible={true}
+        className='loader'
         />
     );
 };
