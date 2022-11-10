@@ -1,9 +1,9 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import ImageGalleryItem from '../ImageGalleryItem';
-import Button from '../Button';
-import Loader from '../Loader';
-import Modal from '../Modal';
+import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem.jsx';
+import Button from 'components/Button/Button.jsx';
+import Loader from 'components/Loader/Loader.jsx';
+import Modal from 'components/Modal/Modal.jsx';
 import { ThreeDots } from 'react-loader-spinner';
 import { fetchImages } from '../../services/pixabay-api';
 

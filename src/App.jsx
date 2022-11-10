@@ -1,8 +1,8 @@
 
 import { Component } from 'react';
-import { NotificationContainer } from './components/Notification';
-import Searchbar from './components/Searchbar/Searchbar';
-import ImageGallery from './components/ImageGallery/ImageGallery';
+import { NotificationContainer } from './components/Notification/Notification.jsx';
+import Searchbar from './components/Searchbar/Searchbar.jsx';
+import ImageGallery from './components/ImageGallery/ImageGallery.jsx';
 
 export default class App extends Component {
     state = {

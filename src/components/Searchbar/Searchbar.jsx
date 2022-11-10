@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Component } from 'react';
-import { showErrorNotification } from '../Notification';
+import { showErrorNotification } from '../Notification/Notification.jsx';
 
 class Searchbar extends Component {
     state = {
