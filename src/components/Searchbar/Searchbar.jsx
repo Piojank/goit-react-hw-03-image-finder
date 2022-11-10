@@ -1,56 +1,51 @@
-import PropTypes from 'prop-types';
 import { Component } from 'react';
-import { showErrorNotification } from '../Notification/Notification.jsx';
+import { FcSearch } from 'react-icons/fc';
+import style from './Searchbar.module.css';
 
-class Searchbar extends Component {
+export default class Searchbar extends Component {
     state = {
-        query: '',
+        searchImage: '',
     };
 
-    handleChange = event => {
-        const { name, value } = event.target;
-        this.setState({ [name]: value });
+    handleImageChange = event => {
+        this.setState({ searchImage: event.currentTarget.value.toLowerCase() });
     };
 
     handleSubmit = event => {
         event.preventDefault();
-        const { query } = this.state;
-        const { onSubmit } = this.props;
-        if (!query.trim()) {
-            showErrorNotification('Input search query.', { position: 'top-center' });
-            return this.setState({ query: '' });
+
+        if (this.state.searchImage.trim() === '') {
+        return alert('Please, enter image name.');
         }
-        onSubmit(query.trim().toLowerCase());
-        this.setState({ query: '' });
+
+        this.props.onSubmit(this.state.searchImage);
+
+        this.setState({ searchImage: '' });
     };
 
     render() {
-        const { query } = this.state;
         return (
-        <header className="Searchbar">
-            <form className="SearchForm" onSubmit={this.handleSubmit}>
-                <button type="submit" className="SearchForm-button">
-                    <span className="SearchForm-button-label">Search</span>
-                </button>
-
+        <header className={style.Searchbar}>
+            <h1 className="visually-hidden">images gallery</h1>
+            <form className={style.SearchForm} onSubmit={this.handleSubmit}>
+            <label htmlFor="searchInput"></label>
             <input
-                className="SearchForm-input"
+                id="searchInput"
                 type="text"
+                name="image"
                 autoComplete="off"
                 autoFocus
                 placeholder="Search images and photos"
-                name="query"
-                value={query}
-                onChange={this.handleChange}
-            />
+                value={this.state.searchImage}
+                className={style.SearchForm__input}
+                onChange={this.handleImageChange}
+            ></input>
+            <button type="submit" className={style.SearchForm__button}>
+                <FcSearch size={30} />
+                <span className={style.SearchForm__buttonLabel}>Search</span>
+            </button>
             </form>
         </header>
         );
     }
 }
-
-Searchbar.propTypes = {
-    onSubmit: PropTypes.func,
-};
-
-export default Searchbar;

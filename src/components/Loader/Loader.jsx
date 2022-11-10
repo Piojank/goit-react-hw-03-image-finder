@@ -1,26 +1,16 @@
-import PropTypes from 'prop-types';
-import { ThreeDots } from 'react-loader-spinner';
+import { RotatingLines } from 'react-loader-spinner';
+import style from './Loader.module.css';
 
-const Loader = () => {
+export const Loader = () => {
     return (
-        <ThreeDots 
-        height="80" 
-        width="80" 
-        radius="9"
-        color="#4fa94d" 
-        ariaLabel="three-dots-loading"
-        wrapperStyle={{}}
-        wrapperClassName=""
-        visible={true}
-        className='loader'
+        <section className={style.SectionLoader}>
+        <RotatingLines
+            strokeColor="grey"
+            strokeWidth="4"
+            animationDuration="0.75"
+            width="96"
+            visible={true}
         />
+        </section>
     );
 };
-
-Loader.propTypes = {
-    type: PropTypes.string,
-    color: PropTypes.string,
-    className: PropTypes.string,
-};
-
-export default Loader;
