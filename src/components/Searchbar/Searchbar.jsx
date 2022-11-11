@@ -1,49 +1,48 @@
-import { Component } from 'react';
-import { FcSearch } from 'react-icons/fc';
+import React, { Component } from 'react';
+import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
 import style from './Searchbar.module.css';
 
 export default class Searchbar extends Component {
-    state = {
-        searchImage: '',
+    static defaultProps = {
+        onSearch: PropTypes.func.isRequired,
     };
 
-    handleImageChange = event => {
-        this.setState({ searchImage: event.currentTarget.value.toLowerCase() });
+    state = {
+        searchRequest: '',
+    };
+
+    handleRequestChange = event => {
+        this.setState({ searchRequest: event.currentTarget.value.toLowerCase() });
     };
 
     handleSubmit = event => {
         event.preventDefault();
-
-        if (this.state.searchImage.trim() === '') {
-        return alert('Please, enter image name.');
+        if (this.state.searchRequest.trim() === '') {
+        return toast.warning('Search field is empty!');
         }
-
-        this.props.onSubmit(this.state.searchImage);
-
-        this.setState({ searchImage: '' });
+        this.props.onSearch(this.state.searchRequest);
+        this.setState({ searchRequest: '' });
     };
 
     render() {
         return (
         <header className={style.Searchbar}>
-            <h1 className="visually-hidden">images gallery</h1>
             <form className={style.SearchForm} onSubmit={this.handleSubmit}>
-            <label htmlFor="searchInput"></label>
+            <button type="submit" className={style.SearchForm_button}>
+                <span className={style.SearchForm_button_label}>Search</span>
+            </button>
+
             <input
-                id="searchInput"
+                className={style.SearchForm_input}
                 type="text"
-                name="image"
+                name="searchRequest"
+                value={this.state.searchRequest}
+                onChange={this.handleRequestChange}
                 autoComplete="off"
                 autoFocus
                 placeholder="Search images and photos"
-                value={this.state.searchImage}
-                className={style.SearchForm__input}
-                onChange={this.handleImageChange}
-            ></input>
-            <button type="submit" className={style.SearchForm__button}>
-                <FcSearch size={30} />
-                <span className={style.SearchForm__buttonLabel}>Search</span>
-            </button>
+            />
             </form>
         </header>
         );

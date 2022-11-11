@@ -1,23 +1,35 @@
-import { ImageGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
+import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import style from './ImageGallery.module.css';
+import PropTypes from 'prop-types';
 
-export const ImageGallery = ({
-    images,
-    handleModalImage,
-    handleModalAlt,
-    showModal,
-    }) => {
+const ImageGallery = ({ images, handlePreview }) => {
+    const renderGallery = () =>
+        images.map(({ id, webformatURL, tags }) => (
+        <ImageGalleryItem
+            className={style.ImageGalleryItem}
+            key={id}
+            tags={tags}
+            smImage={webformatURL}
+            onClick={() => handlePreview(id)}
+        />
+        ));
+
     return (
-        <section>
-        <h2 className="visually-hidden">gallery section</h2>
-        <ul className={style.ImageGallery}>
-            <ImageGalleryItem
-            images={images}
-            handleModalImage={handleModalImage}
-            handleModalAlt={handleModalAlt}
-            showModal={showModal}
-            />
-        </ul>
-        </section>
+        <div>
+        <ul className={style.ImageGallery}>{images ? renderGallery() : null}</ul>
+        </div>
     );
+    };
+
+ImageGallery.propTypes = {
+    handlePreview: PropTypes.func.isRequired,
+    images: PropTypes.arrayOf(
+        PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        webformatURL: PropTypes.string.isRequired,
+        tags: PropTypes.string.isRequired,
+        })
+    ),
 };
+
+export default ImageGallery;

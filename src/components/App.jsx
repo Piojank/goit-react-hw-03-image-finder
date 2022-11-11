@@ -1,137 +1,118 @@
-import { Component } from 'react';
-import fetchPictures from 'utils/pixabay-api';
-import { ImageGallery } from './ImageGallery/ImageGallery';
-import { Button } from './Button/Button';
-import { Loader } from './Loader/Loader';
-import Modal from './Modal/Modal';
+import React, { Component } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Searchbar from './Searchbar/Searchbar';
-import style from './Searchbar/Searchbar.module.css';
+import ImageGallery from './ImageGallery/ImageGallery';
+import Modal from './Modal/Modal';
+import Button from './Button/Button';
+import Loader from './Loader/Loader';
+import { fetchImages } from 'utils/pixabayAPI';
 
-const Status = {
-    IDLE: 'idle',
-    PENDING: 'pending',
-    RESOLVED: 'resolved',
-    REJECTED: 'rejected',
-    };
-
-export default class App extends Component {
+    export default class App extends Component {
     state = {
-        imageName: '',
+        searchRequest: '',
         images: [],
-        page: 1,
-        showButton: false,
-        showModal: false,
-        status: Status.IDLE,
-        modalImage: '',
-        imageAlt: '',
+        galleryPage: 1,
+        error: null,
+        isLoading: false,
+        showModal: null,
     };
 
-    componentDidUpdate(_, prevState) {
-        const prevName = prevState.imageName;
-        const nextName = this.state.imageName;
+    componentDidUpdate(prevProps, prevState) {
+        const prevSearch = prevState.searchRequest;
+        const currentSearch = this.state.searchRequest;
+        const prevGalleryPage = prevState.galleryPage;
+        const currentGalleryPage = this.state.galleryPage;
 
-        const prevPage = prevState.page;
-        const nextPage = this.state.page;
-
-        if (prevName !== nextName || prevPage !== nextPage) {
-        this.setState({ status: Status.PENDING });
-
-        fetchPictures(nextName, this.state.page)
-            .then(images => {
-            if (images.hits.length < 1) {
-                this.setState({
-                showButton: false,
-                status: Status.IDLE,
-                });
-                return alert('No images on your query');
-            }
-
-            this.setState(prevState => ({
-                images: [...prevState.images, ...images.hits],
-            }));
-
-            this.setState({
-                status: Status.RESOLVED,
-                showButton:
-                this.state.page < Math.ceil(images.total / 12) ? true : false,
-            });
-            })
-
-            .then(console.log(this.state.images))
-            .catch(error => console.log(error));
+        if (
+        prevSearch !== currentSearch ||
+        prevGalleryPage !== currentGalleryPage
+        ) {
+        this.updateImages();
         }
     }
 
-    handleFormSubmit = imageName => {
-        if (imageName === this.state.imageName) {
-        return;
+    updateImages() {
+        const { searchRequest, galleryPage } = this.state;
+        this.setState({ isLoading: true });
+        setTimeout(() => {
+        try {
+            fetchImages(searchRequest, galleryPage).then(data => {
+            if (!data.data.hits.length) {
+                return toast.error(
+                'There is no images found with that search request'
+                );
+            }
+            const mappedImages = data.data.hits.map(
+                ({ id, webformatURL, tags, largeImageURL }) => ({
+                id,
+                webformatURL,
+                tags,
+                largeImageURL,
+                })
+            );
+            this.setState({
+                images: [...this.state.images, ...mappedImages],
+            });
+            });
+        } catch (error) {
+            this.setState({ error });
+        } finally {
+            this.setState({ isLoading: false });
         }
+        }, 1000);
+    }
 
+    handleSearchSubmit = searchRequest => {
         this.setState({
-        imageName,
-        page: 1,
+        searchRequest,
         images: [],
-        showButton: false,
-        showModal: false,
-        status: Status.IDLE,
+        galleryPage: 1,
         });
     };
 
-    loadMoreImages = () => {
-        this.setState(prevState => ({ page: prevState.page + 1 }));
+    loadMore = () => {
+        this.setState(prevState => ({
+        galleryPage: prevState.galleryPage + 1,
+        }));
     };
 
-    handleModalImage = event => {
-        this.setState({ modalImage: event });
+    showModalImage = id => {
+        const image = this.state.images.find(image => image.id === id);
+        this.setState({
+        showModal: {
+            largeImageURL: image.largeImageURL,
+            tags: image.tags,
+        },
+        });
     };
 
-    handleModalAlt = event => {
-        this.setState({ imageAlt: event });
-    };
-
-    toggleModal = () => {
-        this.setState(({ showModal }) => ({ showModal: !showModal }));
+    closeModalImage = () => {
+        this.setState({ showModal: null });
     };
 
     render() {
-        const { images, status, showModal, modalImage, imageAlt, showButton } =
-        this.state;
-
-    const {
-        handleFormSubmit,
-        toggleModal,
-        handleModalImage,
-        handleModalAlt,
-        loadMoreImages,
-        } = this;
-
+        const { images, isLoading, error, showModal } = this.state;
         return (
         <>
-            <Searchbar onSubmit={handleFormSubmit} />
-
-            {status === 'idle' && (
-            <h2 className={style.EmptySearch}>Search something!</h2>
-            )}
-
-            {status === 'pending' && <Loader />}
-
+            <Searchbar onSearch={this.handleSearchSubmit} />
+            {error && toast.error(`Whoops, something went wrong: ${error.message}`)}
+            {isLoading && <Loader color={'#3f51b5'} size={32} />}
             {images.length > 0 && (
-            <ImageGallery
-                showModal={toggleModal}
-                images={images}
-                handleModalImage={handleModalImage}
-                handleModalAlt={handleModalAlt}
+            <>
+                <ImageGallery images={images} handlePreview={this.showModalImage} />
+                <Button loadMore={this.loadMore} />
+            </>
+            )}
+            {showModal && (
+            <Modal
+                lgImage={showModal.largeImageURL}
+                tags={showModal.tags}
+                closeModal={this.closeModalImage}
             />
             )}
-
-            {showButton && <Button onClick={loadMoreImages} />}
-
-            {showModal && (
-            <Modal onClose={toggleModal}>
-                <img src={modalImage} alt={imageAlt} />
-            </Modal>
-            )}
+            <ToastContainer autoClose={3000} />
         </>
         );
     }
-}
+    }

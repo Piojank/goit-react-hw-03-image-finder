@@ -1,16 +1,18 @@
-import { RotatingLines } from 'react-loader-spinner';
+import { HollowDotsSpinner } from 'react-epic-spinners';
 import style from './Loader.module.css';
+import PropTypes from 'prop-types';
 
-export const Loader = () => {
+const Loader = ({ color, size }) => {
     return (
-        <section className={style.SectionLoader}>
-        <RotatingLines
-            strokeColor="grey"
-            strokeWidth="4"
-            animationDuration="0.75"
-            width="96"
-            visible={true}
-        />
-        </section>
+        <div className={style.Loader}>
+        <HollowDotsSpinner color={color} size={size} />
+        </div>
     );
 };
+
+Loader.propTypes = {
+    color: PropTypes.string.isRequired,
+    size: PropTypes.number.isRequired,
+};
+
+export default Loader;

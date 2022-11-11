@@ -1,6 +1,5 @@
-.SectionLoader {
-    height: 75vh;
+.Loader {
     display: flex;
+    padding-top: 300px;
     justify-content: center;
-    align-items: center;
 }

@@ -1,30 +1,23 @@
-import style from '../ImageGallery/ImageGallery.module.css';
+import PropTypes from 'prop-types';
+import style from './ImageGalleryItem.module.css';
 
-export const ImageGalleryItem = ({
-        images,
-        handleModalImage,
-        handleModalAlt,
-        showModal,
-    }) => {
+const ImageGalleryItem = ({ smImage, tags, onClick }) => {
     return (
-        <>
-        {images.map(image => (
-            <li
-            key={image.id}
-            className={style.ImageGalleryItem}
-            onClick={showModal}
-            >
-            <img
-                src={image.webformatURL}
-                alt={image.tags}
-                className={style.ImageGalleryItem__image}
-                onClick={() => {
-                handleModalImage(image.largeImageURL);
-                handleModalAlt(image.tags);
-                }}
-            />
-            </li>
-        ))}
-        </>
+        <li className={style.ImageGalleryItem}>
+        <img
+            className={style.ImageGalleryItem_image}
+            src={smImage}
+            alt={tags}
+            onClick={onClick}
+        />
+        </li>
     );
 };
+
+ImageGalleryItem.propTypes = {
+    onClick: PropTypes.func.isRequired,
+    tags: PropTypes.string.isRequired,
+    smImage: PropTypes.string.isRequired,
+};
+
+export default ImageGalleryItem;
