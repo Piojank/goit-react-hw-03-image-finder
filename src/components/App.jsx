@@ -11,7 +11,12 @@ export default class App extends Component {
 
     state = {
         searchRequest: '',
-    }
+        images: [],
+        galleryPage: 1,
+        error: null,
+        isLoading: false,
+        showModal: null,
+    };
 
     render() {
         return (

@@ -1,9 +1,16 @@
 import PropTypes from 'prop-types';
 import s from './ImageGalleryItem.module.css';
 
-export const ImageGalleryItem = ({ smImage, tags, onClick }) => {
+export const ImageGalleryItem = ({ urlImage, tags, onClick }) => {
     return (
-
+        <li className={s.ImageGalleryItem}>
+            <img 
+                className={s.ImageGalleryItem_img}
+                src={urlImage}
+                alt={tags}
+                onClick={onClick}
+            />
+        </li>
     );
 };
 
