@@ -6,8 +6,9 @@ const IMAGE_TYPE = 'image_type=photo';
 const IMAGE_SETTINGS = 'orientation=horizontal&safesearch=true';
 const PER_PAGE = 'per_page=12';
 
-export const fetchImages = async (name, galleryPage) => {
-    const FETCH_URL = `${BASE_URL}?key=${API_KEY}&q=${name}&${IMAGE_TYPE}&${IMAGE_SETTINGS}&page=${galleryPage}&${PER_PAGE}`;
+export const fetchImages = async (name, galleryPageNumber) => {
+    const galleryPage = `&page=${galleryPageNumber}`;
+    const FETCH_URL = `${BASE_URL}?key=${API_KEY}&q=${name}&${IMAGE_TYPE}&${IMAGE_SETTINGS}&${galleryPage}&${PER_PAGE}`;
 
     try {
         const response = await axios.get(FETCH_URL);
