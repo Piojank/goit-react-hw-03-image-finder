@@ -15,7 +15,7 @@ export const ImageGalleryItem = ({ urlImage, tags, onClick }) => {
 };
 
 ImageGalleryItem.propTypes = {
-    smImage: PropTypes.string.isRequired,
+    urlImage: PropTypes.string.isRequired,
     tags: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired,
 };
