@@ -20,7 +20,7 @@ export default class Searchbar extends Component {
         event.preventDefault();
         const { searchRequest } = this.state;
 
-        if (searchRequest.trim() === "") {
+        if (searchRequest.trim() === '') {
             return toast.warning('Search field is empty!');
         }
 
@@ -44,8 +44,8 @@ export default class Searchbar extends Component {
                         name="searchRequest"
                         value={this.state.searchRequest}
                         onChange={this.handleRequestChange}
-                        autocomplete="off"
-                        autofocus
+                        autoComplete="off"
+                        autoFocus
                         placeholder="Search images and photos"
                     />
                 </form>

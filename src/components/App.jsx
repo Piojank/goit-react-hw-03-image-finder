@@ -38,23 +38,24 @@ export default class App extends Component {
         const { searchRequest, galleryPage } = this.state;
         this.setState({ isLoading: true });
         setTimeout(() => {
-        try {fetchImages(searchRequest, galleryPage).then(data => {
-            console.log(data);
-            if (!data.data.hits.length) {
-                return toast.error('There is no images found with that search request');
-            };
-
-            const mappedImages = data.data.hits.map(
+        try {
+            fetchImages(searchRequest, galleryPage).then(data => {
+            if (!data.hits.length) {
+                return toast.error(
+                'There is no images found with that search request'
+                );
+            }
+            const mappedImages = data.hits.map(
                 ({ id, webformatURL, tags, largeImageURL }) => ({
-                    id,
-                    webformatURL,
-                    tags,
-                    largeImageURL,
-                }),
+                id,
+                webformatURL,
+                tags,
+                largeImageURL,
+                })
             );
-                this.setState({
-                    images: [...this.state.images, ...mappedImages],
-                });
+            this.setState({
+                images: [...this.state.images, ...mappedImages],
+            });
             });
         } catch (error) {
             this.setState({ error });
@@ -62,7 +63,7 @@ export default class App extends Component {
             this.setState({ isLoading: false });
         }
         }, 1000);
-    };
+    }
 
     handleSearchSubmit = searchRequest => {
         this.setState({
