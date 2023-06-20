@@ -3,7 +3,6 @@ import s from './ImageGallery.module.css';
 import PropTypes from 'prop-types';
 
 export const ImageGallery = ({ images, handlePreview }) => {
-
     const renderImageGalleryList = () => 
         images.map(({ id, webformatURL, tags }) => (
             <ImageGalleryItem
