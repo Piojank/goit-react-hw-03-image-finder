@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 export const ImageGallery = ({ images, handlePreview }) => {
 
-    const renderImageGalleryList = () => {
+    const renderImageGalleryList = () => 
         images.map(({ id, webformatURL, tags }) => (
             <ImageGalleryItem
                 key={id}
@@ -13,7 +13,6 @@ export const ImageGallery = ({ images, handlePreview }) => {
                 onClick={() => handlePreview(id)}
             />
         ));
-    };
 
     return (
         <div>
